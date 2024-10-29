@@ -1,0 +1,24 @@
+services:
+  backend:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    volumes:
+      - ./api:/app
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        - REBUILD=${REBUILD:-1}
+    image: my-docker-test-frontend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:8000
+    depends_on:
+      - backend
